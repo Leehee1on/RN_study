@@ -1,76 +1,65 @@
-import * as WebBrowser from 'expo-web-browser';
-import React,{useState} from 'react';
+import React,{useEffect,useState} from 'react';
 import {
-  Image,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
-  Button,
   ActivityIndicator,
-  ProgressBarAndroid,
-  StatusBar,
 } from 'react-native';
-
-import { MonoText } from '../components/StyledText';
-import { TextInput } from 'react-native-gesture-handler';
+import { Container, Content, Icon } from 'native-base'; // Container, Content 추가로 import
+import CardComponent from '../components/CardComponent'; // 카드 컴포넌트 추가
 
 const HomeScreen = () => {
-  const [test,setTest] = useState(0)
-  const onPressTest = () => {
-    setTest(test+1)
-    console.log(test)
+  const [feeds,setFeeds] = useState([])
+
+  const fetchFeeds = () => {
+    const data = {
+        id: 1,
+        jsonrpc: "2.0",
+        method: "call",
+        params: [
+          "database_api",
+          "get_discussions_by_created",
+          [{ tag: "kr", limit: 20 }]
+        ]
+    };
+    fetch('https://api.steemit.com', {
+        method: 'POST',
+        body: JSON.stringify(data)
+    })
+    .then(res => res.json())
+    .then(res => res.result)
+    .then(res => setFeeds(res))
   }
+  useEffect(()=>{
+    fetchFeeds()
+  },[])
+  
   return (
-    <View style={styles.container}>
-      <View>
-        <Text onPress={onPressTest}>OnClick!</Text>
-        <Text>{test}</Text>
-      <TouchableOpacity>
-        <Text>sss</Text>
-      </TouchableOpacity>
-      <Button 
-        title="Press Me!"
-      />
-      <ActivityIndicator size="large" color="#ea6263"/>
-      <ProgressBarAndroid />
-      <TextInput/>
-      <StatusBar backgroundColor="blue" barStyle="light-content" />
-      </View>
-      <View>
-        <Text></Text>
-        <Image
-          source={require('../assets/images/robot-prod.png')}
-          style={styles.welcomeImage}
-          />
-        <Image
-          source={require('../assets/images/robot-dev.png')}
-          style={styles.welcomeImage}
-          />
-      </View>
-    </View>
+    <Container style={styles.container}>
+        <Content>
+          {feeds.map(feed => <CardComponent data={feed}/>)}
+        </Content>
+    </Container>
   );
 }
 
-HomeScreen.navigationOptions = {
-  header: null,
-};
-
 export default HomeScreen
 
-
+// header-navigation
+HomeScreen.navigationOptions = {
+  headerLeft: <Icon name='ios-camera' style={{paddingLeft:20}}/>,
+  headerTitle: 
+  <View style={{flex:1,alignItems:"center"}}>
+    <Text style={{fontSize:16,fontWeight:'bold'}}>
+      Instagram
+    </Text>
+  </View>,
+  headerRight: <Icon name='ios-send' style={{paddingRight:20}}/>,
+}
 // style sheet
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    marginTop:20
-  },
-  welcomeImage: {
-    width: 100,
-    height: 80,
-    resizeMode: 'contain',
-    marginTop: 3,
-    marginLeft: -10,
-  },
+  }
 });
