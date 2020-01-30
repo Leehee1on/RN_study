@@ -3,18 +3,7 @@ import { Image, Text, StyleSheet } from 'react-native';
 
 import { Card, CardItem, Thumbnail, Body, Left, Right, Button, Icon } from 'native-base';
 
-// const dummyData = {
-//   name:"Leehee",
-//   date:"Jan 29, 2020",
-//   thumbnailUrl: 'https://steemitimages.com/u/anpigon/avatar',
-//   imgUrl:'https://user-images.githubusercontent.com/3969643/51441420-b41f1c80-1d14-11e9-9f5d-af5cd3a6aaae.png',
-//   likes:222,
-//   comment:'Instagram 클론 코딩 공부하기'  
-// }
-
-
 const CardComponent = ({data}) => {
-  console.log(data.image)
   const { image } = JSON.parse(data.json_metadata); // json_metadata에서 이미지 url을 파싱
   return (
       <Card>
@@ -42,7 +31,7 @@ const CardComponent = ({data}) => {
         </CardItem>
         <CardItem>
           <Text>
-          { data.body.replace(/\n/g,' ').slice(0, 200) }
+            {data.body.replace(/\n/g,' ').slice(0, 200) }
           </Text>
         </CardItem>
         <CardItem style={{ height:45 }}>
@@ -69,11 +58,3 @@ const CardComponent = ({data}) => {
 }
 
 export default CardComponent
-
-const style = StyleSheet.create({
-  container: {
-      flex: 1,
-      alignItems: 'center',
-      justifyContent: 'center',
-  }
-});

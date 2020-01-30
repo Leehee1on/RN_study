@@ -6,7 +6,6 @@ export default function LinksScreen() {
   return (
     <View style={styles.container}>
       <ActivityIndicator size="large" color="#000"/>
-      <Text style={styles.text}>Home</Text>
     </View>
   );
 }
